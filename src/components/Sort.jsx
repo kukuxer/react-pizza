@@ -21,9 +21,8 @@ export function Sort() {
 
         document.body.addEventListener('click', handleClick);
 
-        return () => {
-            document.body.removeEventListener('click', handleClick);
-        };
+        return () => document.body.removeEventListener('click', handleClick);
+
     }, []);
 
 

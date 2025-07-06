@@ -1,0 +1,58 @@
+$orange: #ff6a00;
+$orange-dark: darken($orange, 10%);
+$gray-dark: #333;
+$gray-light: #666;
+$background: #fff;
+
+.empty-basket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;      // reduce height a bit
+  padding: 0 0.5rem; // less horizontal padding
+  background-color: $background;
+  text-align: center;
+
+  &__icon {
+    width: 64px;    // smaller icon
+    height: 64px;
+    margin-bottom: 1rem;
+    stroke: $orange;
+  }
+
+  &__title {
+    font-size: 1.75rem;  // smaller title font
+    font-weight: 700;
+    color: $gray-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  &__description {
+    max-width: 280px;   // narrower text container
+    color: $gray-light;
+    font-size: 0.9rem;  // smaller text
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  &__button {
+    background-color: $orange;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;  // smaller padding
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba($orange, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover,
+    &:focus {
+      background-color: $orange-dark;
+      box-shadow: 0 6px 12px rgba($orange-dark, 0.4);
+      outline: none;
+    }
+  }
+}

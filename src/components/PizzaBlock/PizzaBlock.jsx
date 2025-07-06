@@ -1,10 +1,28 @@
 import React, {useState} from 'react'
+import {useDispatch, useSelector} from "react-redux";
+import {addProduct} from "../../redux/slices/cartSlice";
 
 export function PizzaBlock(props) {
-    const [count, setCount] = useState(0);
-    const [activeTypeIndex, setActiveTypeIndex] = useState(0);
+    const cartItem = useSelector((state) => state.cart.items.find(obj => obj.id === props.product.id));
+    const addedCount = cartItem ? cartItem.count : 0;
+    const [activeTypeIndex, setActiveTypeIndex] = useState(
+        props.product.types.length > 0 ? props.product.types[0] : 0
+    );
     const [activeSizeIndex, setActiveSizeIndex] = useState(0);
     const typeNames = ["thin", "traditional"];
+    const dispatch = useDispatch()
+    const onClickAdd = () => {
+
+        const item = {
+            id: props.product.id,
+            title: props.product.name,
+            imageUrl: props.product.imageUrl,
+            price: props.product.price,
+            type: typeNames[activeTypeIndex],
+            size: props.product.sizes[activeSizeIndex]
+        }
+        dispatch(addProduct(item))
+    }
 
 
     return (
@@ -27,21 +45,21 @@ export function PizzaBlock(props) {
                     }
                 </ul>
                 <ul>
-                    {
-                        props.product.sizes.map((i, n) => (
-                            <li key={i} className={activeSizeIndex === i ? "active" : ""}
-                                onClick={() => setActiveSizeIndex(i)}>
-                                {props.product.sizes[n]} cm
-                            </li>
-                        ))
-                    }
+                    {props.product.sizes.map((size, index) => (
+                        <li
+                            key={size}
+                            className={activeSizeIndex === index ? "active" : ""}
+                            onClick={() => setActiveSizeIndex(index)}
+                        >
+                            {size} cm
+                        </li>
+                    ))}
                 </ul>
+
             </div>
             <div className="pizza-block__bottom">
                 <div className="pizza-block__price">from {props.product.price} $</div>
-                <button onClick={() => {
-                    setCount(count + 1)
-                }} className="button button--outline button--add">
+                <button onClick={onClickAdd} className="button button--outline button--add">
                     <svg
                         width="12"
                         height="12"
@@ -55,7 +73,7 @@ export function PizzaBlock(props) {
                         />
                     </svg>
                     <span>Add</span>
-                    <i>{count}</i>
+                    <i>{addedCount}</i>
                 </button>
             </div>
         </div>

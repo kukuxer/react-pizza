@@ -67,6 +67,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
   }
 
   .content__title {
@@ -166,6 +167,7 @@ body {
       align-items: center;
       justify-content: space-between;
       width: 13%;
+      user-select: none;
 
       &-minus {
         svg {
