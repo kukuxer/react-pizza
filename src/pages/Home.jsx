@@ -1,51 +1,38 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect } from 'react'
 import {Categories} from "../components/Categories";
 import {Sort} from "../components/Sort";
 import {PizzaBlock, PizzaBlockSkeleton} from "../components/PizzaBlock";
-import axios from "axios";
 import {Pagination} from "../components/Pagination";
-import {SearchContext} from "../components/App/App";
 import {useDispatch, useSelector} from "react-redux";
-import {setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
+import {selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
 import qs from 'qs'
 import {useNavigate} from "react-router-dom";
+import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
+import ErrorPage from "../components/ErrorPage";
+
 
 
 export function Home() {
 
     const isMounted = React.useRef(false);
     const isSearch = React.useRef(false);
-    const {categoryId, currentPage} = useSelector(state => state.filter);
+    const {categoryId, currentPage, sortIndex,searchValue} = useSelector(selectFilter);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
 
-    const sortIndex = useSelector(state => state.filter.sort);
-    const [pizzas, setPizzas] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const {searchValue} = React.useContext(SearchContext);
+    const {items,status} = useSelector(selectPizzaData);
 
-    const fetchPizzas = async () => {
-        setIsLoading(true);
-        try {
-            const params = new URLSearchParams();
+    const fetchItems = async () => {
+        const params = new URLSearchParams();
+        if (categoryId > 0) params.append('category', categoryId);
+        if (searchValue) params.append('search', searchValue);
+        if (currentPage > 0) params.append('page', currentPage);
+        params.append('limit', 4);
 
-            if (categoryId > 0) params.append('category', categoryId);
-            if (searchValue) params.append('search', searchValue);
-            if (currentPage > 0) params.append('page', currentPage);
-            params.append('limit', 4);
 
-            const {data} = await axios.get(
-                `https://6851d68f8612b47a2c0b62f3.mockapi.io/api/v1/items?${params}`
-            );
-            setPizzas(data);
-            console.log("rerender");
-        } catch (err) {
-            console.error("Failed to fetch pizzas:", err);
-            setPizzas([]);
-        } finally {
-            setIsLoading(false);
-        }
+        dispatch(fetchPizzas({params}));
+
     };
     useEffect(() => {
         if (window.location.search) {
@@ -65,7 +52,7 @@ export function Home() {
     useEffect(() => {
         window.scrollTo({top: 25, behavior: 'smooth'});
         if (!isSearch.current) {
-            fetchPizzas();
+            fetchItems();
         }
         isSearch.current = false;
     }, [categoryId, currentPage, searchValue]);
@@ -84,7 +71,7 @@ export function Home() {
     }, [categoryId, currentPage, sortIndex]);
 
 
-    const SortedPizzas = [...pizzas]
+    const SortedPizzas = [...items]
         .sort((a, b) => {
             if (sortIndex === 1) return a.price - b.price; // sort by price
             else if (sortIndex === 2) return a.name.toLowerCase().localeCompare(b.name.toLowerCase()); // sort by name
@@ -93,6 +80,12 @@ export function Home() {
         .map((obj) => <PizzaBlock key={obj.id} product={obj}/>)
 
     const Skeletons = [...Array(9)].map((_, index) => <PizzaBlockSkeleton key={index}/>)
+
+    if (status === 'error') {
+        return (
+            <ErrorPage text={'404 404 404'}/>
+        )
+    }
 
     return (
         <div className="container">
@@ -107,7 +100,7 @@ export function Home() {
             <div className="content__items">
                 <div className="content__items">
                     {
-                        isLoading
+                        (status === 'loading')
                             ? Skeletons
                             : SortedPizzas
                     }

@@ -1,5 +1,58 @@
-.root{
+$orange: #ff6a00;
+$orange-dark: darken($orange, 10%);
+$gray-dark: #333;
+$gray-light: #666;
+$background: #fff;
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  padding: 0 0.5rem;
+  background-color: $background;
   text-align: center;
-  padding: 100px;
-  margin: 0 auto;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    stroke: $orange;
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $gray-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  &__description {
+    max-width: 280px;
+    color: $gray-light;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  &__button {
+    background-color: $orange;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba($orange, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover,
+    &:focus {
+      background-color: $orange-dark;
+      box-shadow: 0 6px 12px rgba($orange-dark, 0.4);
+      outline: none;
+    }
+  }
 }

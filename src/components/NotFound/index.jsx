@@ -1,10 +1,22 @@
-import * as React from "react";
-import styles from "./NotFound.module.scss"
+import styles from './NotFound.module.scss';
+import { Link } from 'react-router-dom';
+
 export const NotFound = () => {
     return (
-        <div className={styles.root}>
-            <h1>nothing here </h1>
-            <p>We are sorry, but the page you requested was not found</p>
+        <div className={styles['not-found']}>
+            <svg className={styles['not-found__icon']} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                <line x1="8" y1="12" x2="16" y2="12" strokeWidth="2" />
+            </svg>
+            <h1 className={styles['not-found__title']}>Page Not Found</h1>
+            <p className={styles['not-found__description']}>
+                Sorry, the page you're looking for doesn't exist.
+            </p>
+            <Link to="/" className={styles['not-found__button']}>
+                Go Back Home
+            </Link>
         </div>
     );
 };
+
+

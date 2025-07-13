@@ -2,22 +2,24 @@ import React, { useCallback } from 'react';
 import styles from './Search.module.scss';
 import { FiSearch } from 'react-icons/fi';
 import { FiX } from 'react-icons/fi';
-import {SearchContext} from "../App/App";
-import {debounce} from "lodash"; // Cross icon
+
+import {debounce} from "lodash";
+import {useDispatch} from "react-redux";
+import {setSearchValue} from "../../redux/slices/filterSlice";
 
 export const Search = () => {
-    const {searchValue, setSearchValue} = React.useContext(SearchContext);
+    const dispatch = useDispatch();
     const inputRef = React.useRef();
     const [value, setValue] = React.useState('');
 
     const handleClear = () => {
         setValue('');
-        setSearchValue('');
+        dispatch(setSearchValue(''))
         inputRef.current.focus();
     };
     const updateSearch = useCallback(
         debounce((str) => {
-            setSearchValue(str);
+            dispatch(setSearchValue(str))
         }, 400),
         []
     );
@@ -38,7 +40,7 @@ export const Search = () => {
                 onChange={(e) => onChange(e)}
             />
             <FiSearch className={styles.icon} />
-            {searchValue && (
+            {value && (
                 <FiX
                     className={styles.clearIcon}
                     onClick={handleClear}
