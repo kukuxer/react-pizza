@@ -1,9 +1,19 @@
 import React from 'react'
-import {useDispatch} from "react-redux";
-import {addProduct,minusItem,removeItem} from "../../redux/slices/cartSlice";
+import {addProduct, minusItem, removeItem} from "../../redux/slices/cartSlice";
+import {useAppDispatch} from "../../redux/store";
 
-export const CartItem = ({id,name,type,price,count,size,imageUrl}) => {
-    const dispatch = useDispatch()
+type CartItemProps = {
+    id: string,
+    name: string,
+    type: string,
+    size: number,
+    price: number,
+    count: number,
+    imageUrl: string
+}
+
+export const CartItem: React.FC<CartItemProps> = ({id, name, type, price, count, size, imageUrl}) => {
+    const dispatch = useAppDispatch();
     const onClickPlus = () => {
         dispatch(addProduct({id}))
     }
@@ -12,7 +22,7 @@ export const CartItem = ({id,name,type,price,count,size,imageUrl}) => {
         dispatch(minusItem({id}))
     }
     const onClickRemove = () => {
-            dispatch(removeItem({id}))
+        dispatch(removeItem({id}))
     }
 
     return (
@@ -39,7 +49,7 @@ export const CartItem = ({id,name,type,price,count,size,imageUrl}) => {
                     </svg>
 
                 </div>
-                <b >{count}</b>
+                <b>{count}</b>
                 <div onClick={onClickPlus} className="button button--outline button--circle cart__item-count-plus">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                          xmlns="http://www.w3.org/2000/svg">

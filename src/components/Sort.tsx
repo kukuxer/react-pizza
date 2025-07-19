@@ -1,21 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {useDispatch, useSelector} from "react-redux";
-import {setSort} from "../redux/slices/filterSlice";
+import {useSelector} from "react-redux";
+import {selectSort, setSort} from "../redux/slices/filterSlice";
+import {useAppDispatch} from "../redux/store";
 
 export function Sort() {
     const [open, setOpen] = useState(false);
-    const sortIndex = useSelector(state => state.filter.sort);
+    const sortIndex = useSelector(selectSort);
     const sortedBy = ["rating", "price", "alphabet"];
-    const dispatch = useDispatch();
-    const sortRef = useRef();
+    const dispatch = useAppDispatch();
+    const sortRef = useRef<HTMLDivElement>(null);
 
 
     useEffect(() => {
-        const handleClick = (e) => {
+        const handleClick = (e: any) => {
             const path = e.composedPath ? e.composedPath() : [];
 
             if (!path.includes(sortRef.current)) {
-               setOpen(false);
+                setOpen(false);
             }
         };
 
@@ -63,9 +64,7 @@ export function Sort() {
                                     onClick={() => {
                                         dispatch(setSort(i));
                                         setOpen(prevState => !prevState)
-                                    }
-
-                                    }
+                                    }}
                                 >
                                     {name}
                                 </li>

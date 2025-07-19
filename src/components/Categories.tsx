@@ -1,8 +1,13 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 
-export function Categories({ value, onClickCategory }) {
+type CategoriesProps = {
+    value: number;
+    onClickCategory: any
+};
+
+export const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
     const categories = ["All", "Meat", "Vegetarian", "Grill", "Spicy", "Closed"];
-    const itemRefs = useRef([]);
+    const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
     return (
         <div className="categories">
@@ -10,7 +15,9 @@ export function Categories({ value, onClickCategory }) {
                 {categories.map((name, i) => (
                     <li
                         key={i}
-                        ref={(el) => (itemRefs.current[i] = el)}
+                        ref={(el) => {
+                            itemRefs.current[i] = el
+                        }}
                         className={value === i ? 'active' : ''}
                         onClick={() => onClickCategory(i)}
                     >
@@ -20,4 +27,4 @@ export function Categories({ value, onClickCategory }) {
             </ul>
         </div>
     );
-}
+};

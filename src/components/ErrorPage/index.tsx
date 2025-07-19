@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ErrorPage.module.scss';
 
-export default function ErrorPage() {
+export const ErrorPage: React.FC = () => {
     return (
         <div className={styles['error-page']}>
             <svg

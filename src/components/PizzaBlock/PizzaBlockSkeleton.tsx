@@ -1,7 +1,7 @@
 import React from "react"
 import ContentLoader from "react-content-loader"
 
-export const PizzaBlockSkeleton = (props) => (
+export const PizzaBlockSkeleton = (props: any) => (
     <div className="pizza-block">
         <ContentLoader
             speed={2}

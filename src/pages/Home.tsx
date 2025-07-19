@@ -8,16 +8,17 @@ import {selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/
 import qs from 'qs'
 import {useNavigate} from "react-router-dom";
 import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
-import ErrorPage from "../components/ErrorPage";
+import {ErrorPage} from "../components/ErrorPage";
+import {useAppDispatch} from "../redux/store";
 
 
 
-export function Home() {
+export const Home: React.FC = () => {
 
     const isMounted = React.useRef(false);
     const isSearch = React.useRef(false);
-    const {categoryId, currentPage, sortIndex,searchValue} = useSelector(selectFilter);
-    const dispatch = useDispatch();
+    const {categoryId, currentPage, sort,searchValue} = useSelector(selectFilter);
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
 
@@ -25,10 +26,10 @@ export function Home() {
 
     const fetchItems = async () => {
         const params = new URLSearchParams();
-        if (categoryId > 0) params.append('category', categoryId);
+        if (categoryId > 0) params.append('category', String(categoryId));
         if (searchValue) params.append('search', searchValue);
-        if (currentPage > 0) params.append('page', currentPage);
-        params.append('limit', 4);
+        if (currentPage > 0) params.append('page', String(currentPage));
+        params.append('limit', '4');
 
 
         dispatch(fetchPizzas({params}));
@@ -42,6 +43,7 @@ export function Home() {
             const parsedPage = Number(params.currentPage);
             const parsedSort = Number(params.sortIndex);
             dispatch(setFilters({
+                searchValue,
                 categoryId: parsedCategoryId,
                 currentPage: parsedPage,
                 sort: parsedSort
@@ -62,19 +64,19 @@ export function Home() {
             const queryString = qs.stringify({
                 categoryId,
                 currentPage,
-                sortIndex
+                sort
             });
             navigate(`?${queryString}`);
         } else {
             isMounted.current = true;
         }
-    }, [categoryId, currentPage, sortIndex]);
+    }, [categoryId, currentPage, sort]);
 
 
     const SortedPizzas = [...items]
         .sort((a, b) => {
-            if (sortIndex === 1) return a.price - b.price; // sort by price
-            else if (sortIndex === 2) return a.name.toLowerCase().localeCompare(b.name.toLowerCase()); // sort by name
+            if (sort === 1) return a.price - b.price; // sort by price
+            else if (sort === 2) return a.name.toLowerCase().localeCompare(b.name.toLowerCase()); // sort by name
             else return b.rating - a.rating; // sort by rating
         })
         .map((obj) => <PizzaBlock key={obj.id} product={obj}/>)
@@ -83,14 +85,14 @@ export function Home() {
 
     if (status === 'error') {
         return (
-            <ErrorPage text={'404 404 404'}/>
+            <ErrorPage />
         )
     }
 
     return (
         <div className="container">
             <div className="content__top">
-                <Categories value={categoryId} onClickCategory={(i) => {
+                <Categories value={categoryId} onClickCategory={(i: number) => {
                     dispatch(setCategoryId(i));
                     dispatch(setCurrentPage(1));
                 }}/>
@@ -106,7 +108,7 @@ export function Home() {
                     }
                 </div>
             </div>
-            <Pagination currentPage={currentPage} onChangePage={(e) => dispatch(setCurrentPage(e))}/>
+            <Pagination currentPage={currentPage} onChangePage={(e: any) => dispatch(setCurrentPage(e))}/>
         </div>
     )
 }

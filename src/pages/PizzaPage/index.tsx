@@ -1,54 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import './PizzaPage.scss';
 
-import { NotFoundPage } from '../NotFoundPage';
-import { useDispatch } from 'react-redux';
-import { fetchPizza } from '../../redux/slices/pizzaSlice';
+import {NotFoundPage} from '../NotFoundPage';
+import {fetchPizza} from '../../redux/slices/pizzaSlice';
+import {getStarRating} from "./getStarRating";
+import {Pizza} from "../../entity/Pizza";
+import {useAppDispatch} from "../../redux/store";
+import {addProduct} from "../../redux/slices/cartSlice";
+import Loading from "../../components/Loading";
 
 const typeNames = ['thin', 'traditional'];
 
 
-const getStarRating = (rating) => {
-    const fullStars = Math.floor(rating / 2);
-    const halfStar = rating % 2 >= 1 ? true : false;
-    return (
-        <div className="pizza-rating">
-            {[...Array(fullStars)].map((_, i) => (
-                <span key={i}>★</span>
-            ))}
-            {halfStar && <span>½</span>}
-            {[...Array(5 - fullStars - (halfStar ? 1 : 0))].map((_, i) => (
-                <span key={i}>☆</span>
-            ))}
-        </div>
-    );
-};
-
-const PizzaPage = () => {
-    const dispatch = useDispatch();
-    const { id } = useParams();
-    const [pizza, setPizza] = useState(null);
-
-    useEffect(() => {
-        dispatch(fetchPizza({ id })).then(({ payload }) => setPizza(payload));
-    }, [dispatch, id]);
+const PizzaPage: React.FC = () => {
+    const dispatch = useAppDispatch();
+    const {id} = useParams<{ id: string }>();
+    const [pizza, setPizza] = useState<Pizza>();
 
     const [activeTypeIndex, setActiveTypeIndex] = useState(0);
     const [activeSizeIndex, setActiveSizeIndex] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-    if (!pizza) {
-        return <NotFoundPage />;
-    }
+    useEffect(() => {
+        if (!id) return;
+        dispatch(fetchPizza({id})).then(({payload}) => {
+            setLoading(false);
+            setPizza(payload)
+        });
+
+    }, [dispatch, id]);
+
+
+    if (loading) return (
+        <Loading/>
+    )
+
+    if (!pizza) return <NotFoundPage/>;
+
 
     return (
         <div className="pizza-page container">
             <div className="pizza-details">
-                <img src={pizza.imageUrl} alt={pizza.name} className="pizza-image" />
+                <img src={pizza.imageUrl} alt={pizza.name} className="pizza-image"/>
                 <div className="pizza-info">
                     <h1 className="pizza-title">{pizza.name}</h1>
-
-
                     <div className="pizza-selectors">
                         <ul className="type-selector">
                             {typeNames.map((type, i) => (
@@ -87,11 +83,10 @@ const PizzaPage = () => {
                         </ul>
                     </div>
                     <h4 className="pizza-description">{`Try our delicious ${pizza.name.toLowerCase()} made with premium ingredients and baked to perfection.`}</h4>
-                    {getStarRating(pizza.rating)}
-
+                    {getStarRating({rating: pizza.rating})}
                     <div className="pizza-footer">
                         <span className="pizza-price">от {pizza.price} ₽</span>
-                        <button className="add-to-cart">Добавить</button>
+                        <button onClick={() => dispatch(addProduct(pizza))} className="add-to-cart">Добавить</button>
                     </div>
                 </div>
             </div>

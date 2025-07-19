@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './EmptyBasket.module.scss';
+import styles from './EmptyBasket.module.scss'
 
-export default function EmptyBasket() {
+export const EmptyBasket: React.FC = () => {
     return (
         <div className={styles['empty-basket']}>
             <svg

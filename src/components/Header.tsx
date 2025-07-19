@@ -8,6 +8,8 @@ export function Header() {
     const {items, totalPrice} = useSelector(cartSelector);
     const {pathname} = useLocation();
 
+    const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0);
+
     return (
         <div className="header">
             <div className="container">
@@ -60,7 +62,7 @@ export function Header() {
                                     strokeLinejoin="round"
                                 />
                             </svg>
-                            <span>{items.length}</span>
+                            <span>{totalCount}</span>
                         </Link>
                     }
                 </div>

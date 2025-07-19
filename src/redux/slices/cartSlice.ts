@@ -1,6 +1,22 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {RootState} from "../store";
 
-const initialState = {
+type CartItem = {
+    id: string;
+    name: string;
+    type: string;
+    size: number;
+    price: number;
+    count: number;
+    imageUrl: string;
+}
+
+interface CartSliceState {
+    totalPrice: number;
+    items: CartItem[];
+}
+
+const initialState: CartSliceState = {
     totalPrice: 0,
     items: []
 }
@@ -24,7 +40,7 @@ const cartSlice = createSlice({
             }, 0);
             state.totalPrice = Math.round(total * 100) / 100;
         },
-        minusItem(state, action) {
+        minusItem(state, action: PayloadAction<{ id: string }>) {
             const findItem = state.items.find(obj => obj.id === action.payload.id);
             if (findItem && findItem.count > 1) {
                 findItem.count--;
@@ -38,7 +54,7 @@ const cartSlice = createSlice({
             ) / 100;
         },
 
-        removeItem(state, action) {
+        removeItem(state, action: PayloadAction<{ id: string }>) {
             state.items = state.items.filter(obj => obj.id !== action.payload.id);
 
             state.totalPrice = Math.round(
@@ -54,7 +70,7 @@ const cartSlice = createSlice({
 })
 
 
-export const cartSelector = (state) => state.cart;
+export const cartSelector = (state: RootState) => state.cart;
 
 export const {addProduct, minusItem, removeItem, clearItems} = cartSlice.actions
 export default cartSlice.reducer

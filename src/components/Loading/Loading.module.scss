@@ -1,0 +1,35 @@
+// Loading.module.scss
+
+$dodo-orange: #ff6900;
+
+.dodoLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fff;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid $dodo-orange;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  margin-top: 16px;
+  font-size: 16px;
+  color: $dodo-orange;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

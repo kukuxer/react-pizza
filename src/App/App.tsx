@@ -1,10 +1,9 @@
-import "../../scss/app.scss";
-import {Header} from "../Header";
-import {Home} from "../../pages/Home";
-import {NotFoundPage} from "../../pages/NotFoundPage";
+import "../scss/app.scss";
+import {Home} from "../pages/Home";
+import {NotFoundPage} from "../pages/NotFoundPage";
 import {Route, Routes} from "react-router-dom";
-import {Cart} from "../../pages/Cart";
-import PizzaPage from "../../pages/PizzaPage";
+import {Cart} from "../pages/Cart";
+import PizzaPage from "../pages/PizzaPage";
 import Layout from "./Layout";
 
 function App() {

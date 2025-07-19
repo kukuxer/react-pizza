@@ -1,7 +1,8 @@
 import styles from './NotFound.module.scss';
 import { Link } from 'react-router-dom';
+import React from "react";
 
-export const NotFound = () => {
+export const NotFound: React.FC = () => {
     return (
         <div className={styles['not-found']}>
             <svg className={styles['not-found__icon']} viewBox="0 0 24 24" fill="none" stroke="currentColor">
