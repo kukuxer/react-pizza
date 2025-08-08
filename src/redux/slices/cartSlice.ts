@@ -40,6 +40,7 @@ const cartSlice = createSlice({
                 return obj.price * obj.count + sum;
             }, 0);
             state.totalPrice = Math.round(total * 100) / 100;
+            localStorage.setItem('cart', JSON.stringify(state.items));
         },
         minusItem(state, action: PayloadAction<{ id: string }>) {
             const findItem = state.items.find(obj => obj.id === action.payload.id);
@@ -53,6 +54,7 @@ const cartSlice = createSlice({
             state.totalPrice = Math.round(
                 state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0) * 100
             ) / 100;
+            localStorage.setItem('cart', JSON.stringify(state.items));
         },
 
         removeItem(state, action: PayloadAction<{ id: string }>) {
@@ -61,11 +63,13 @@ const cartSlice = createSlice({
             state.totalPrice = Math.round(
                 state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0) * 100
             ) / 100;
+            localStorage.setItem('cart', JSON.stringify(state.items));
         },
 
         clearItems(state) {
             state.items = [];
             state.totalPrice = 0;
+            localStorage.setItem('cart', JSON.stringify(state.items));
         }
     }
 })

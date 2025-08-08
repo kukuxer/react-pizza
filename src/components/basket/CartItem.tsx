@@ -1,7 +1,7 @@
 import React from 'react'
 import {addProduct, minusItem, removeItem} from "../../redux/slices/cartSlice";
 import {useAppDispatch} from "../../redux/store";
-import clsx from "clsx";
+
 
 type CartItemProps = {
     id: string,
@@ -35,7 +35,7 @@ export const CartItem: React.FC<CartItemProps> = ({id, name, type, price, count,
             </div>
             <div className="cart__item-info">
                 <h3>{name}</h3>
-                <p>{type}, {size} см.</p>
+                <p>{size} см.</p>
             </div>
             <div className="cart__item-count">
                 <button disabled={count === 1} onClick={onClickMinus} className="button button--outline button--circle cart__item-count-minus">
