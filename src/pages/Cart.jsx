@@ -7,7 +7,7 @@ import {EmptyBasket} from "../components/basket/EmptyBasket";
 import {useAppDispatch} from "../redux/store";
 
 
-export const Cart = () => {
+ const Cart = () => {
 
     const dispatch = useAppDispatch();
     const {totalPrice, items} = useSelector((state) => state.cart);
@@ -84,3 +84,5 @@ export const Cart = () => {
         </div>
     );
 };
+
+export default Cart;

@@ -1,14 +1,17 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {useSelector} from "react-redux";
-import {selectSort, setSort} from "../redux/slices/filterSlice";
+
+import {setSort} from "../redux/slices/filterSlice";
 import {useAppDispatch} from "../redux/store";
 
-export function Sort() {
+ type SortProps = {
+     sortIndex: number
+ }
+
+export const Sort: React.FC<SortProps> = React.memo((props: SortProps) => {
     const [open, setOpen] = useState(false);
-    const sortIndex = useSelector(selectSort);
     const sortedBy = ["rating", "price", "alphabet"];
-    const dispatch = useAppDispatch();
     const sortRef = useRef<HTMLDivElement>(null);
+   const dispatch = useAppDispatch();
 
 
     useEffect(() => {
@@ -52,14 +55,14 @@ export function Sort() {
                     />
                 </svg>
                 <b>Sort by:</b>
-                <span>{sortedBy[sortIndex]}</span>
+                <span>{sortedBy[props.sortIndex]}</span>
             </div>
             {open &&
                 <div className="sort__popup">
                     <ul>
                         {
                             sortedBy.map((name, i) => (
-                                <li className={sortIndex === i ? "active" : ""}
+                                <li className={props.sortIndex === i ? "active" : ""}
                                     key={i}
                                     onClick={() => {
                                         dispatch(setSort(i));
@@ -76,4 +79,4 @@ export function Sort() {
 
         </div>
     )
-}
+});

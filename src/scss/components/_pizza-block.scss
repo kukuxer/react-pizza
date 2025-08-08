@@ -8,6 +8,7 @@
   user-select: none;
 
 
+
   &-wrapper {
     display: flex;
     justify-content: center;
@@ -17,6 +18,7 @@
   &__image {
     width: 260px;
     height: 250px;
+    border-radius: 15px;
   }
 
   &__title {

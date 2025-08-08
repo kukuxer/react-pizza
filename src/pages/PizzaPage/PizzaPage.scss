@@ -19,6 +19,14 @@
       flex: 1;
       min-width: 260px;
 
+      .pizza-category {
+        font-size: 16px;
+        color: #888;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+
       .pizza-title {
         font-size: 2.2rem;
         font-weight: 700;
@@ -124,6 +132,7 @@
         .pizza-footer {
           justify-content: center;
         }
+
         .pizza-description {
           font-size: 16px;
           color: #666;

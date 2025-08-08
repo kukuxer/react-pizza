@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import './PizzaPage.scss';
 
-import {NotFoundPage} from '../NotFoundPage';
+import NotFoundPage from '../NotFound';
 import {fetchPizza} from '../../redux/slices/pizzaSlice';
 import {getStarRating} from "./getStarRating";
 import {Pizza} from "../../entity/Pizza";
 import {useAppDispatch} from "../../redux/store";
 import {addProduct} from "../../redux/slices/cartSlice";
 import Loading from "../../components/Loading";
+import {categories} from "../../utils/consts";
 
 const typeNames = ['thin', 'traditional'];
 
@@ -45,6 +46,7 @@ const PizzaPage: React.FC = () => {
                 <img src={pizza.imageUrl} alt={pizza.name} className="pizza-image"/>
                 <div className="pizza-info">
                     <h1 className="pizza-title">{pizza.name}</h1>
+                    <p className="pizza-category">{categories[pizza.category]}</p>
                     <div className="pizza-selectors">
                         <ul className="type-selector">
                             {typeNames.map((type, i) => (

@@ -1,13 +1,23 @@
 import React, { useRef } from 'react';
+import {setCategoryId, setCurrentPage} from "../redux/slices/filterSlice";
+import {useAppDispatch} from "../redux/store";
+import {categories} from "../utils/consts";
 
 type CategoriesProps = {
     value: number;
-    onClickCategory: any
 };
 
-export const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
-    const categories = ["All", "Meat", "Vegetarian", "Grill", "Spicy", "Closed"];
+export const Categories = React.memo((props: CategoriesProps) => {
+
+
     const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const dispatch = useAppDispatch();
+
+
+    const onChangeCategory = React.useCallback((i: number) => {
+        dispatch(setCategoryId(i));
+        dispatch(setCurrentPage(1));
+    }, [dispatch]);
 
     return (
         <div className="categories">
@@ -18,8 +28,8 @@ export const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }
                         ref={(el) => {
                             itemRefs.current[i] = el
                         }}
-                        className={value === i ? 'active' : ''}
-                        onClick={() => onClickCategory(i)}
+                        className={props.value === i ? 'active' : ''}
+                        onClick={() => onChangeCategory(i)}
                     >
                         {name}
                     </li>
@@ -27,4 +37,4 @@ export const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }
             </ul>
         </div>
     );
-};
+});

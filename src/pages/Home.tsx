@@ -1,10 +1,9 @@
-import React, {useEffect } from 'react'
-import {Categories} from "../components/Categories";
-import {Sort} from "../components/Sort";
-import {PizzaBlock, PizzaBlockSkeleton} from "../components/PizzaBlock";
-import {Pagination} from "../components/Pagination";
-import {useDispatch, useSelector} from "react-redux";
-import {selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
+import React, {useCallback, useEffect, useMemo} from 'react'
+
+
+import {PizzaBlock, PizzaBlockSkeleton, Sort, Pagination, Categories} from "../components";
+import {useSelector} from "react-redux";
+import {selectFilter, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
 import qs from 'qs'
 import {useNavigate} from "react-router-dom";
 import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
@@ -12,29 +11,25 @@ import {ErrorPage} from "../components/ErrorPage";
 import {useAppDispatch} from "../redux/store";
 
 
-
-export const Home: React.FC = () => {
+const Home: React.FC = () => {
 
     const isMounted = React.useRef(false);
     const isSearch = React.useRef(false);
-    const {categoryId, currentPage, sort,searchValue} = useSelector(selectFilter);
+    const {categoryId, currentPage, sort, searchValue} = useSelector(selectFilter);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const {items, status} = useSelector(selectPizzaData);
 
-
-    const {items,status} = useSelector(selectPizzaData);
-
-    const fetchItems = async () => {
+    const fetchItems = useCallback(async () => {
         const params = new URLSearchParams();
         if (categoryId > 0) params.append('category', String(categoryId));
         if (searchValue) params.append('search', searchValue);
         if (currentPage > 0) params.append('page', String(currentPage));
         params.append('limit', '4');
 
-
         dispatch(fetchPizzas({params}));
+    }, [categoryId, currentPage, searchValue, dispatch]);
 
-    };
     useEffect(() => {
         if (window.location.search) {
             const params = qs.parse(window.location.search.substring(1));
@@ -52,9 +47,8 @@ export const Home: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        window.scrollTo({top: 25, behavior: 'smooth'});
         if (!isSearch.current) {
-            fetchItems();
+            fetchItems().then( () => window.scrollTo({top: 25, behavior: 'smooth'}));
         }
         isSearch.current = false;
     }, [categoryId, currentPage, searchValue]);
@@ -63,40 +57,40 @@ export const Home: React.FC = () => {
         if (isMounted.current) {
             const queryString = qs.stringify({
                 categoryId,
-                currentPage,
-                sort
+                currentPage
             });
             navigate(`?${queryString}`);
         } else {
             isMounted.current = true;
         }
-    }, [categoryId, currentPage, sort]);
+    }, [categoryId, currentPage]);
 
 
-    const SortedPizzas = [...items]
-        .sort((a, b) => {
-            if (sort === 1) return a.price - b.price; // sort by price
-            else if (sort === 2) return a.name.toLowerCase().localeCompare(b.name.toLowerCase()); // sort by name
-            else return b.rating - a.rating; // sort by rating
-        })
-        .map((obj) => <PizzaBlock key={obj.id} product={obj}/>)
+    const SortedPizzas = useMemo(() => {
+        return [...items]
+            .sort((a, b) => {
+                if (sort === 1) return a.price - b.price;
+                if (sort === 2) return a.name.localeCompare(b.name);
+                return b.rating - a.rating;
+            })
+            .map((obj) => <PizzaBlock key={obj.id} product={obj}/>);
+    }, [items, sort]);
 
-    const Skeletons = [...Array(9)].map((_, index) => <PizzaBlockSkeleton key={index}/>)
+
+    const Skeletons = useMemo(() => [...Array(9)].map((_, i) => <PizzaBlockSkeleton key={i}/>), []);
+
 
     if (status === 'error') {
         return (
-            <ErrorPage />
+            <ErrorPage/>
         )
     }
 
     return (
         <div className="container">
             <div className="content__top">
-                <Categories value={categoryId} onClickCategory={(i: number) => {
-                    dispatch(setCategoryId(i));
-                    dispatch(setCurrentPage(1));
-                }}/>
-                <Sort/>
+                <Categories value={categoryId}/>
+                <Sort sortIndex={sort}/>
             </div>
             <h2 className="content__title">All pizzas</h2>
             <div className="content__items">
@@ -112,3 +106,4 @@ export const Home: React.FC = () => {
         </div>
     )
 }
+export default Home
